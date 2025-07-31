@@ -1,4 +1,5 @@
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const net = require('net');
 const express = require('express');
@@ -88,7 +89,12 @@ const options = {
     cert: fs.readFileSync('server.cert'),
 };
 
-https.createServer(options, app).listen(HTTPS_PORT, () => {
-    console.log(`HTTPS GNSS proxy listening at https://0.0.0.0:${HTTPS_PORT}/geopos`);
+// https.createServer(options, app).listen(HTTPS_PORT, () => {
+//     console.log(`HTTPS GNSS proxy listening at https://0.0.0.0:${HTTPS_PORT}/geopos`);
+//     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
+// });
+
+http.createServer(app).listen(HTTPS_PORT, () => {
+    console.log(`HTTPS GNSS proxy listening at http://0.0.0.0:${HTTPS_PORT}/geopos`);
     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
 });
