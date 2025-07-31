@@ -4,7 +4,7 @@ const net = require('net');
 const express = require('express');
 const cors = require('cors');
 
-const HTTPS_PORT = 8081;               // HTTPS server port
+const HTTPS_PORT = process.env.PORT || 8081;               // HTTPS server port
 const TCP_HOST = '192.168.1.178';      // Meta Quest 3 IP
 const TCP_PORT = 8010;                 // TCP port of GNSS master
 
