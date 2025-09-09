@@ -22,11 +22,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Print directory tree
-      run: tree -L 3
-
     - name: Build
       run: |
         npm ci
         npx webpack
         npm run prod
+
+    - name: Print directory tree
+      run: tree -L 3
