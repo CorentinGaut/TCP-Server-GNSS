@@ -16,59 +16,41 @@ jobs:
     name: Build bundle
     runs-on: ubuntu-latest
     steps:
-
-      # Use specific Node.js version
       - uses: actions/checkout@v4
-      - name: Use Node.js 22.x
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.17
-          cache: 'npm'
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run prod
 
-      # Install packages
-      - name: Install packages
-        run: npm ci
-
-      # Build bundle
-      - name: Build bundle
-        if: ${{ success() }}
-        run: npm run prod
 
   # Deploy on gnss-master website
-  deploy:
-    name: Deploy to gnss-master
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
+  # deploy:
+  #   name: Deploy to gnss-master
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      # Download artifact from build
-      - name: Download gnss-master bundle
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-gnss-master
+  #     # Download artifact from build
+  #     - name: Download gnss-master bundle
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist-gnss-master
 
-      # Copy files for deployment
-      - name: build site
-        run: |
-          mkdir -p gnss-master/dist
-          cp -R dist/*.js gnss-master/dist/
+  #     # Copy files for deployment
+  #     - name: build site
+  #       run: |
+  #         mkdir -p gnss-master/dist
+  #         cp -R dist/*.js gnss-master/dist/
 
-      # When deploying a release, we copy itowns bundles in dev folder to be published on
-      # iTowns/itowns.github.io. This is because we can't publish both a release version
-      # (in itowns/ folder) and a @next version (in itowns/dev folder) at the same time.
-      - name: add dev bundle if release
-        if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
-        run: |
-          cp -R gnss-master dev
-          mv dev gnss-master/
-
-      # Deploy
-      - name: Deploy Dev to gnss master
-        if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gnss-master
-          destination_dir: ./gnss-master
-          enable_jekyll: true
+  #     # Deploy
+  #     - name: Deploy Dev to gnss master
+  #       if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         publish_dir: ./gnss-master
+  #         destination_dir: ./gnss-master
+  #         enable_jekyll: true
