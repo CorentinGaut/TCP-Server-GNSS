@@ -1,10 +1,12 @@
-name: NodeJS with Webpack
+name: GNSS master deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -12,21 +14,29 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [14, 16, 18]
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: |
-        npm i
-        npx webpack
-        npm run start
+      - name: Install dependencies
+        run: npm install
 
-    - name: Print directory tree
-      run: tree -L 3
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run prod
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/ 
