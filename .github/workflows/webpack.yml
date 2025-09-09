@@ -26,7 +26,7 @@ jobs:
       run: |
         npm i
         npx webpack
-        npm run prod
+        npm run start
 
     - name: Print directory tree
       run: tree -L 3
