@@ -5,23 +5,9 @@ const net = require('net');
 const express = require('express');
 const cors = require('cors');
 
-
-const os = require('os');
-const HTTPS_PORT = process.env.PORT || 8082;               // HTTPS server port
-// Automatically detect the first non-internal IPv4 address
-function getLocalIPv4() {
-    const interfaces = os.networkInterfaces();
-    for (const name of Object.keys(interfaces)) {
-        for (const iface of interfaces[name]) {
-            if (iface.family === 'IPv4' && !iface.internal) {
-                return iface.address;
-            }
-        }
-    }
-    return '127.0.0.1'; // fallback
-}
-const TCP_HOST = getLocalIPv4();      // Automatically detected local IPv4
-const TCP_PORT = 8085;                 // TCP port of GNSS master
+const HTTPS_PORT = process.env.PORT || 8081;               // HTTPS server port
+const TCP_HOST = '192.168.1.178';      // Meta Quest 3 IP
+const TCP_PORT = 8010;                 // TCP port of GNSS master
 
 const app = express();
 app.use(cors());
@@ -102,3 +88,13 @@ const options = {
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.cert'),
 };
+
+// https.createServer(options, app).listen(HTTPS_PORT, () => {
+//     console.log(`HTTPS GNSS proxy listening at https://0.0.0.0:${HTTPS_PORT}/geopos`);
+//     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
+// });
+
+// http.createServer(app).listen(HTTPS_PORT, () => {
+//     console.log(`HTTPS GNSS proxy listening at http://0.0.0.0:${HTTPS_PORT}/geopos`);
+//     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
+// });
