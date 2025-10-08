@@ -94,7 +94,7 @@ const options = {
 //     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
 // });
 
-// http.createServer(app).listen(HTTPS_PORT, () => {
-//     console.log(`HTTPS GNSS proxy listening at http://0.0.0.0:${HTTPS_PORT}/geopos`);
-//     console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
-// });
+http.createServer(app).listen(HTTPS_PORT, () => {
+    console.log(`HTTPS GNSS proxy listening at http://0.0.0.0:${HTTPS_PORT}/geopos`);
+    console.log(`Forwarding TCP connection to ${TCP_HOST}:${TCP_PORT}`);
+});
