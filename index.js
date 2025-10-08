@@ -4,10 +4,23 @@ const fs = require('fs');
 const net = require('net');
 const express = require('express');
 const cors = require('cors');
+const os = require('os');
 
-const HTTPS_PORT = process.env.PORT || 8081;               // HTTPS server port
-const TCP_HOST = '192.168.1.178';      // Meta Quest 3 IP
-const TCP_PORT = 8010;                 // TCP port of GNSS master
+const HTTPS_PORT = process.env.PORT || 8082;               // HTTPS server port
+const TCP_PORT = 8012;                 // TCP port of GNSS master
+
+function getLocalIPv4() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return '127.0.0.1'; // fallback
+}
+const TCP_HOST = getLocalIPv4()
 
 const app = express();
 app.use(cors());
